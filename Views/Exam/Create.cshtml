@@ -1,0 +1,96 @@
+﻿@model SinavUygulamasi.Models.Exam
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Oluştur</title>
+</head>
+<body>
+
+<h4>Sınav</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <span asp-validation-for="Questions" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="TextTitle" class="control-label"></label>
+                <input asp-for="TextTitle" class="form-control" />
+                <span asp-validation-for="TextTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            @{
+
+                for (int i = 0; i < 4; i++)
+                {
+                    var emptyQuestion = new Question();
+
+                    Model.Questions.Add(emptyQuestion);
+                    
+                    <div class="form-group">
+                        <input placeholder="Soru @(i+1)" asp-for="@Model.Questions[i].QuestionContent" class="form-control mb-2" />
+                        <span asp-validation-for="@Model.Questions[i].QuestionContent" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col mb-2">
+                                <input placeholder="A)" asp-for="@Model.Questions[i].A" class="form-control a" />
+                                <span asp-validation-for="@Model.Questions[i].A" class="text-danger"></span>
+                            </div>
+                            <div class="col mb-2">
+                                <input placeholder="B)" asp-for="@Model.Questions[i].B" class="form-control b" />
+                                <span asp-validation-for="@Model.Questions[i].B" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-2">
+                                <input placeholder="C)" asp-for="@Model.Questions[i].C" class="form-control c" />
+                                <span asp-validation-for="@Model.Questions[i].C" class="text-danger"></span>
+                            </div>
+                            <div class="col mb-2">
+                                <input placeholder="D)" asp-for="@Model.Questions[i].D" class="form-control d" />
+                                <span asp-validation-for="@Model.Questions[i].D" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            @*<select asp-for="@Model.Questions[i].Answer" class="form-control" asp-items="Html.GetEnumSelectList<Answer>()">
+                        <option>Doğru Cevap seç</option> </select>*@
+                            <select asp-for="@Model.Questions[i].Answer" class="form-control w-50">
+
+                                @foreach (Answer amswer in Enum.GetValues(typeof(Answer)))
+                                {
+                                    <option selected="false">@amswer</option>
+                                }
+                                <option selected="selected">Doğru Cevap seç</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <span asp-validation-for="@Model.Questions[i].Answer" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+            }
+            <div class="form-group">
+                <input type="submit" value="Oluştur" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Listeye dön</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+</body>
+</html>
