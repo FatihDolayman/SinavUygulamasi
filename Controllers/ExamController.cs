@@ -2,27 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SinavUygulamasi.Data;
 using SinavUygulamasi.Models;
+using SinavUygulamasi.ViewModel;
 
 namespace SinavUygulamasi.Controllers
 {
     public class ExamController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ExamController(ApplicationDbContext context)
+        public ExamController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: Exam
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Exam.ToListAsync());
+            var user = _userManager.GetUserAsync(User).Result;
+            var exams = _context.Exams.ToList();
+            var userExamResults = _context.UserExamResults.Where(a => a.UserId == user.Id);
+            var model = new List<UserExamListViewModel>();
+            foreach (var exam in exams)
+            {
+                var userExamResult = userExamResults.FirstOrDefault(a => a.ExamId == exam.Id); var userExam = new UserExamListViewModel
+                {
+                    Id = exam.Id,
+                    TextTitle = exam.TextTitle,
+                };
+                if (userExamResult != null)
+                {
+                    userExam.IsTaken = true;
+                    userExam.ResultDate = userExamResult.ResultDate;
+                    userExam.CorrectAnswersCount = userExamResult.CorrectAnswersCount;
+                    userExam.WrongAnswersCount = userExamResult.WrongAnswersCount;
+                }
+                model.Add(userExam);
+            }
+            return View(model);
         }
 
         // GET: Exam/Details/5
@@ -33,120 +56,15 @@ namespace SinavUygulamasi.Controllers
                 return NotFound();
             }
 
-            var exam = await _context.Exam
+            var question = await _context.Question
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (exam == null)
+            if (question == null)
             {
                 return NotFound();
             }
 
-            return View(exam);
-        }
-
-        // GET: Exam/Create
-        public IActionResult Create()
-        {
-            var model = new Exam();
-            return View(model);
-        }
-
-        // POST: Exam/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TextTitle,Text,Questions")] Exam exam)
-        {
-            if (ModelState.IsValid)
-            {
-                exam.CreatedAt = DateTime.UtcNow;
-                _context.Add(exam);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(exam);
-        }
-
-        // GET: Exam/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var exam = await _context.Exam.FindAsync(id);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-            return View(exam);
-        }
-
-        // POST: Exam/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TextTitle,Text,CreatedAt,CreatedById,ModifiedAt,ModifiedById")] Exam exam)
-        {
-            if (id != exam.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(exam);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ExamExists(exam.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(exam);
-        }
-
-        // GET: Exam/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var exam = await _context.Exam
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-
-            return View(exam);
-        }
-
-        // POST: Exam/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var exam = await _context.Exam.FindAsync(id);
-            _context.Exam.Remove(exam);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
+            return View(question);
+        }   
         private bool ExamExists(int id)
         {
             return _context.Exam.Any(e => e.Id == id);

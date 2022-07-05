@@ -1,8 +1,5 @@
-﻿@model SinavUygulamasi.Models.Exam
+﻿@model List<Question>
 
-@{
-    Layout = null;
-}
 
 <!DOCTYPE html>
 
@@ -13,51 +10,59 @@
 </head>
 <body>
 
-<div>
-    <h4>Exam</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TextTitle)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TextTitle)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Text)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Text)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedById)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="container">
+        <div class="row">
+            @{ var counter = 0;}
+            @foreach (var item in Model)
+            {
+                counter++;
+                <div class="col-md-12 mt-3">
+                    <h5> @counter.  @item.Title   </h5>
+                    <div class="row question">
+                        <div class="col-md-12">
+                            <input class="A radio" type="radio" name="@item.Id" value="A" />
+                            <label>@item.A</label>
+                        </div>
+                        <div class="col-md-12">
+                            <input class="B radio" type="radio" name="@item.Id" value="B" />
+                            <label>@item.B</label>
+                        </div>
+                        <div class="col-md-12">
+                            <input class="C radio" type="radio" name="@item.Id" value="C" />
+                            <label>@item.C</label>
+                        </div>
+                        <div class="col-md-12">
+                            <input class="D radio" type="radio" name="@item.Id" value="D" />
+                            <label>@item.D</label>
+                        </div>
+
+                        <div class="col-md-12">
+                            <input class="answer" type="hidden" value="@item.Answer" />
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+            }
+        </div>
+        <div class="col-12 py-5">
+            <button id="btnShowAnswers" class="btn btn-success mb-5 float-right"> Doğru Cevapları Göster</button>
+        </div>
+        <div>
+            Sonuç:
+            <div id="resultDiv">
+                <div class="container">
+                    <p>Doğru Sayısı : </p>
+
+
+
+
+                </div>
+                <script>$("<p></p>").insertAfter(".correctAnswerCount");</script>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

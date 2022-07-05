@@ -16,7 +16,8 @@ namespace SinavUygulamasi.Data
 
         public DbSet<Exam> Exam { get; set; }
         public DbSet<Question> Question { get; set; }
-        public DbSet<UserAnswer> UserAnswer { get; set; }
-        public DbSet<UserExamResult> UserExamResult { get; set; }
+        public DbSet<UserAnswer> UserAnswers { get; set; }
+        public DbSet<UserExamResult> UserExamResults { get; set; }
+        
     }
 }
