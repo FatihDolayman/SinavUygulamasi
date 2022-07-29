@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SinavUygulamasi.Models.Exam>
+﻿@model IEnumerable<UserExamListViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,6 +6,7 @@
 }
 
 <h1>Index</h1>
+
 
 <p>
     <a asp-action="Create">Yeni Ekle</a>
@@ -17,21 +18,16 @@
                 @Html.DisplayNameFor(model => model.TextTitle)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Text)
+                @Html.DisplayNameFor(model => model.ResultDate)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.WrongAnswersCount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
+                @Html.DisplayNameFor(model => model.CorrectAnswersCount)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedById)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedById)
-            </th>
-            <th></th>
+
         </tr>
     </thead>
     <tbody>
@@ -40,26 +36,28 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TextTitle)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedById)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedById)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detaylar</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
-            </td>
+            @if (item.IsTaken)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.ResultDate)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.WrongAnswersCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CorrectAnswersCount)
+                </td>
+            }
+            else
+            {
+                <td colspan="3">
+                    Bu sınava henüz girmediniz
+                </td>
+            }
+
+
+
         </tr>
 }
     </tbody>

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<SinavUygulamasi.Models.UserExamResult>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Kullanıcı Sınav Sonuçları</h1>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Exam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CorrectAnswersCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WrongAnswersCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResultDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Exam.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CorrectAnswersCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WrongAnswersCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResultDate)
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>
